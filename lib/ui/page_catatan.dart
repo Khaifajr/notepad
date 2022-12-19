@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:notepad/model/catatan.dart';
 import 'package:notepad/ui/crud_catatan.dart';
 import 'package:notepad/ui/detail.catatan.dart';
@@ -44,6 +43,7 @@ class _PageCatatan extends State<PageCatatan> {
         children: [
           ItemCatatan(
             catatan: Catatan(
+              id: 1,
               title: 'aku adalah',
               konten: 'test',
             ),
