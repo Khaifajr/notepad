@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:notepad/model/catatan.dart';
-import 'package:notepad/ui/detail.catatan.dart';
+import 'package:notepad/bloc/produk_bloc.dart';
+import 'package:notepad/ui/page_catatan.dart';
+import 'package:notepad/widget/warning_dialog.dart';
 
 class CrudCatatan extends StatefulWidget {
   Catatan? catatan;
@@ -106,9 +107,60 @@ class _CrudCatatanState extends State<CrudCatatan> {
               // ignore: unnecessary_null_comparison
               if (widget.catatan != null) {
                 //kondisi update produk
+                ubah();
+              } else {
+                //kondisi tambah produk
+                simpan();
               }
             }
           }
         });
+  }
+
+  simpan() {
+    setState(() {
+      _isLoading = true;
+    });
+    Catatan createProduk = Catatan(konten: null);
+    createProduk.title = _titleTextboxController.text;
+    createProduk.konten = _kontenTextboxController.text;
+    ProdukBloc.addProduk(produk: createProduk).then((value) {
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (BuildContext context) => PageCatatan()));
+    }, onError: (error) {
+      showDialog(
+          context: this.context,
+          builder: (BuildContext context) => WarningDialog(
+                description: "Simpan gagal, silahkan coba lagi",
+                okClick: () {},
+              ));
+    });
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  ubah() {
+    setState(() {
+      _isLoading = true;
+    });
+    Catatan updateProduk = new Catatan();
+    updateProduk.id = widget.catatan!.id;
+    updateProduk.title = _titleProdukTextboxController.text;
+    updateProduk.namaProduk = _namaProdukTextboxController.text;
+    updateProduk.hargaProduk = int.parse(_hargaProdukTextboxController.text);
+      Navigator.of(context).push(new MaterialPageRoute(
+          builder: (BuildContext context) => ProdukPage()));
+    }, onError: (error) {
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => WarningDialog(
+                description: "Permintaan ubah data gagal, silahkan coba lagi",
+                okClick: () {},
+              ));
+    });
+    setState(() {
+      _isLoading = false;
+    });
   }
 }

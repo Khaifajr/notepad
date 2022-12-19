@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:notepad/bloc/registrasi_bloc.dart';
+import 'package:notepad/widget/success_dialog.dart';
+import 'package:notepad/widget/warning_dialog.dart';
 
 class RegistrasiPage extends StatefulWidget {
   const RegistrasiPage({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
   _RegistrasiPageState createState() => _RegistrasiPageState();
 }
 
 class _RegistrasiPageState extends State<RegistrasiPage> {
   final _formkey = GlobalKey<FormState>();
-  final bool _isLoading = false;
+  bool _isLoading = false;
 
   final _namaTextboxController = TextEditingController();
   final _emailTextboxController = TextEditingController();
@@ -20,22 +22,24 @@ class _RegistrasiPageState extends State<RegistrasiPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Registrasi"),
+        title: Text("Registrasi"),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Form(
-            key: _formkey,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                _namaTextField(),
-                _emailTextField(),
-                _passwordTextField(),
-                _passwordKonfirmasiTextField(),
-                _buttonRegistrasi()
-              ],
+        child: Container(
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Form(
+              key: _formkey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _namaTextField(),
+                  _emailTextField(),
+                  _passwordTextField(),
+                  _passwordKonfirmasiTextField(),
+                  _buttonRegistrasi()
+                ],
+              ),
             ),
           ),
         ),
@@ -123,5 +127,36 @@ class _RegistrasiPageState extends State<RegistrasiPage> {
         });
   }
 
-  void _submit() {}
+  void _submit() {
+    _formkey.currentState!.save();
+    setState(() {
+      _isLoading = true;
+    });
+    RegistrasiBloc.registrasi(
+            nama: _namaTextboxController.text,
+            email: _emailTextboxController.text,
+            password: _passwordTextboxController.text)
+        .then((value) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => SuccessDialog(
+                description: "Registrasi berhasil, Silahkan login",
+                okClick: () {
+                  Navigator.pop(context);
+                },
+              ));
+    }, onError: (error) {
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => WarningDialog(
+                description: "Registrasi gagal, Silahkan Coba Lagi",
+                okClick: () {},
+              ));
+    });
+    setState(() {
+      _isLoading = false;
+    });
+  }
 }

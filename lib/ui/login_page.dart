@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:notepad/bloc/login_bloc.dart';
+import 'package:notepad/helpers/user_info.dart';
+import 'package:notepad/ui/page_catatan.dart';
 import 'package:notepad/ui/registrasi_page.dart';
+import 'package:notepad/widget/warning_dialog.dart';
 
 class LoginPage extends StatefulWidget {
   @override
-  // ignore: library_private_types_in_public_api
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
   final _formkey = GlobalKey<FormState>();
-  final bool _isLoading = false;
+  bool _isLoading = false;
 
   final _namaTextboxController = TextEditingController();
   final _emailTextboxController = TextEditingController();
@@ -108,6 +111,32 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
   }
-}
 
-class _submit {}
+  void _submit() {
+    _formkey.currentState!.save();
+    setState(() {
+      _isLoading = true;
+    });
+    LoginBloc.login(
+            email: _emailTextboxController.text,
+            password: _passwordTextboxController.text)
+        .then((value) async {
+      await UserInfo().setToken(value.token.toString());
+      await UserInfo().setUserID(int.parse(value.userID.toString()));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const PageCatatan()));
+    }, onError: (error) {
+      print(error);
+      showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) => WarningDialog(
+                description: "Login gagal, silahkan coba lagi",
+                okClick: () {},
+              ));
+    });
+    setState(() {
+      _isLoading = false;
+    });
+  }
+}

@@ -1,8 +1,7 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'package:flutter/material.dart';
+import 'package:notepad/helpers/user_info.dart';
+import 'package:notepad/ui/login_page.dart';
 import 'package:notepad/ui/page_catatan.dart';
-import 'package:notepad/ui/registrasi_page.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,12 +13,33 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  Widget page = const CircularProgressIndicator();
+
+  @override
+  void initState() {
+    super.initState();
+    isLogin();
+  }
+
+  void isLogin() async {
+    var token = await UserInfo().getToken();
+    if (token != null) {
+      setState(() {
+        page = const PageCatatan();
+      });
+    } else {
+      setState(() {
+        page = LoginPage();
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      title: 'note pad',
+    return MaterialApp(
+      title: 'Toko Kita',
       debugShowCheckedModeBanner: false,
-      home: PageCatatan(),
+      home: page,
     );
   }
 }

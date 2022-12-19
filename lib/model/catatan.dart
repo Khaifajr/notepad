@@ -5,8 +5,6 @@ class Catatan {
   String title;
   String konten;
 
-  static var notesColor;
-
   Catatan({
     required this.id,
     required this.title,
