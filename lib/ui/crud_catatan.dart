@@ -35,7 +35,7 @@ class _CrudCatatanState extends State<CrudCatatan> {
       setState(() {
         judul = "UBAH CATATAN";
         tombolSubmit = "UBAH";
-        _titleTextboxController.text = widget.catatan!.title;
+        _titleTextboxController.text = widget.catatan!.title!;
         _kontenTextboxController.text = widget.catatan!.konten.toString();
       });
     } else {
@@ -124,7 +124,7 @@ class _CrudCatatanState extends State<CrudCatatan> {
     Catatan createProduk = Catatan(konten: null);
     createProduk.title = _titleTextboxController.text;
     createProduk.konten = _kontenTextboxController.text;
-    ProdukBloc.addProduk(produk: createProduk).then((value) {
+    ProdukBloc.addProduk(catatan: createProduk).then((value) {
       Navigator.of(context).push(
           MaterialPageRoute(builder: (BuildContext context) => PageCatatan()));
     }, onError: (error) {
@@ -146,11 +146,11 @@ class _CrudCatatanState extends State<CrudCatatan> {
     });
     Catatan updateProduk = new Catatan();
     updateProduk.id = widget.catatan!.id;
-    updateProduk.title = _titleProdukTextboxController.text;
-    updateProduk.namaProduk = _namaProdukTextboxController.text;
-    updateProduk.hargaProduk = int.parse(_hargaProdukTextboxController.text);
-      Navigator.of(context).push(new MaterialPageRoute(
-          builder: (BuildContext context) => ProdukPage()));
+    updateProduk.title = _titleTextboxController.text;
+    updateProduk.konten = _kontenTextboxController.text;
+    ProdukBloc.updateProduk(catatan: updateProduk).then((value) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (BuildContext context) => const PageCatatan()));
     }, onError: (error) {
       showDialog(
           context: context,

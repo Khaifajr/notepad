@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 class Catatan {
   int? id;
-  String title;
-  String konten;
+  String? title;
+  String? konten;
 
   Catatan({
-    required this.id,
-    required this.title,
-    required this.konten,
+    this.id,
+    this.title,
+    this.konten,
   });
 
   factory Catatan.fromJson(Map<String, dynamic> obj) {

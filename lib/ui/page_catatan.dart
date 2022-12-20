@@ -98,7 +98,7 @@ class ItemCatatan extends StatelessWidget {
       },
       child: Card(
         child: ListTile(
-          title: Text(catatan.title),
+          title: Text(catatan.title!),
           subtitle: Text(catatan.konten.toString()),
         ),
       ),

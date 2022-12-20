@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:notepad/model/catatan.dart';
 import 'package:notepad/ui/crud_catatan.dart';
+import 'package:notepad/bloc/produk_bloc.dart';
+import 'package:notepad/ui/page_catatan.dart';
+import 'package:notepad/widget/warning_dialog.dart';
 
 class DetailCatatan extends StatefulWidget {
   Catatan catatan;
@@ -63,23 +66,31 @@ class _DetailCatatanState extends State<DetailCatatan> {
       content: const Text("Yakin ingin menghapus data ini?"),
       actions: [
         //tombol hapus
-        RaisedButton(
+        ElevatedButton(
           child: const Text("Ya"),
-          color: Colors.green,
-          onPressed: () {},
+          onPressed: () {
+            ProdukBloc.deleteProduk(id: widget.catatan.id).then((value) {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (BuildContext context) => const PageCatatan()));
+            }, onError: (error) {
+              showDialog(
+                  context: context,
+                  builder: ((context) => WarningDialog(
+                        description: "Hapus data gagal, silahkan coba lagi",
+                        okClick: () {},
+                      )));
+            });
+          },
         ),
+
         //tombol batal
         OutlinedButton(
-            child: const Text("Batal"),
-            onPressed: (() => Navigator.pop(context)))
+          child: const Text("Batal"),
+          onPressed: () => Navigator.pop(context),
+        )
       ],
     );
 
     showDialog(builder: (context) => alertDialog, context: context);
   }
 }
-
-RaisedButton(
-    {required Text child,
-    required MaterialColor color,
-    required Null Function() onPressed}) {}
