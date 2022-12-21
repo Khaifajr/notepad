@@ -76,7 +76,7 @@ class _CrudCatatanState extends State<CrudCatatan> {
         controller: _titleTextboxController,
         validator: (value) {
           if (value!.isEmpty) {
-            return "Kode Produk harus diisi";
+            return "";
           }
           return null;
         });
@@ -91,7 +91,7 @@ class _CrudCatatanState extends State<CrudCatatan> {
         controller: _kontenTextboxController,
         validator: (value) {
           if (value!.isEmpty) {
-            return "Nama Produk harus diisi";
+            return "";
           }
           return null;
         });
