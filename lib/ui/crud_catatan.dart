@@ -19,7 +19,6 @@ class _CrudCatatanState extends State<CrudCatatan> {
   String tombolSubmit = "SIMPAN";
 
   final _titleTextboxController = TextEditingController();
-  final _tanggalTextboxController = TextEditingController();
   final _kontenTextboxController = TextEditingController();
 
   @override
